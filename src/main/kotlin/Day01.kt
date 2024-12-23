@@ -1,6 +1,6 @@
 
 
-fun main(args: Array<String>) {
+fun main() {
     val day = "01"
     val part1ExpectedTestResult = 11
     val part2ExpectedTestResult = 0
@@ -34,12 +34,12 @@ fun main(args: Array<String>) {
         return sum
     }
 
-    // Read a test input from the `src/DayXX_test.txt` file:
-    val testInput = readInput("Day${day}_test")  // Test input
+    // Read a test input from the `src/main/resources/DayXX_test.txt` file:
+    val testInput = readInput("main/resources/Day${day}_test")  // Test input
     check(part1(testInput) == part1ExpectedTestResult)
 
-    // Read the input from the `src/DayXX.txt` file.
-    val input = readInput("Day${day}")  // Actual input
+    // Read the input from the `src/main/resources/DayXX.txt` file.
+    val input = readInput("main/resources/Day${day}")  // Actual input
     val part1Actual = part1(input)
     val part2Actual = part2(input)
     part1Actual.println()
