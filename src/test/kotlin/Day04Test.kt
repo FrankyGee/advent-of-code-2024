@@ -6,7 +6,7 @@ class Day04Test {
 
     private val testInput = readInput("Day${day}_test")
     private val input = readInput("Day${day}")
-    private var sut = Day03()
+    private var sut = Day04()
 
     @Test
     fun `Day 4 Part 1 test`() {
@@ -17,21 +17,21 @@ class Day04Test {
 
     @Test
     fun `Day 4 Part 2 test`() {
-        expect(-1) {
+        expect(9) {
             sut.part2(testInput)
         }
     }
 
     @Test
     fun `Day 4 Part 1 actual`() {
-        expect(-1) {
+        expect(2427) {
             sut.part1(input)
         }
     }
 
     @Test
     fun `Day 4 Part 2 actual`() {
-        expect(-1) {
+        expect(1900) {
             sut.part2(input)
         }
     }
