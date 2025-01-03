@@ -1,13 +1,30 @@
+class Day01 {
+    fun splitIntoColumns(input: List<String>): MutableList<MutableList<Int>> {
+        return input
+            .map { line -> line.split(whitespaceRegex) }
+            .fold(mutableListOf<MutableList<Int>>()) { acc, row ->
+                if (acc.isEmpty()) {
+                    for (column in row) {
+                        acc.add(mutableListOf(column.toInt()))
+                    }
+                } else {
+                    for ((index, column) in row.withIndex()) {
+                        acc[index].add(column.toInt())
+                    }
+                }
+                return@fold acc
+            }
+    }
 
-
-fun main() {
-    val day = "01"
-    val part1ExpectedTestResult = 11
-    val part2ExpectedTestResult = 0
-    val part1Answer = 1660292
-    val part2Answer = 22776016
-
-//    val isTest = "-t" in args
+    // Solution from Kotlin video https://www.youtube.com/watch?v=r7nMRJ57QA0
+    // Approx 3x faster than mine
+    fun simpleSplit(input: List<String>): Pair<List<Int>, List<Int>> {
+        return input.map { line ->
+            val left = line.substringBefore(" ").toInt()
+            val right = line.substringAfterLast(" ").toInt()
+            left to right
+        }.unzip()
+    }
 
     fun part1(input: List<String>): Int {
         val (left, right) = splitIntoColumns(input)
@@ -34,16 +51,13 @@ fun main() {
         return sum
     }
 
-    // Read a test input from the `src/main/resources/DayXX_test.txt` file:
-    val testInput = readInput("main/resources/Day${day}_test")  // Test input
-    check(part1(testInput) == part1ExpectedTestResult)
+    // Solution from Kotlin video https://www.youtube.com/watch?v=r7nMRJ57QA0
+    fun altPart2(input: List<String>): Int {
+        val (left, right) = splitIntoColumns(input)
 
-    // Read the input from the `src/main/resources/DayXX.txt` file.
-    val input = readInput("main/resources/Day${day}")  // Actual input
-    val part1Actual = part1(input)
-    val part2Actual = part2(input)
-    part1Actual.println()
-    part2Actual.println()
-    check(part1Actual == part1Answer)
-    check(part2Actual == part2Answer)
+        val frequencies = right.toList().groupingBy { it }.eachCount()
+        return left.fold(0) { acc, num ->
+            acc + num * frequencies.getOrDefault(num, 0)
+        }
+    }
 }
