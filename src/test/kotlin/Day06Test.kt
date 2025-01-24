@@ -17,7 +17,7 @@ class Day06Test {
 
     @Test
     fun `Day 6 Part 2 test`() {
-        expect(-1) {
+        expect(6) {
             sut.part2(testInput)
         }
     }
@@ -31,7 +31,7 @@ class Day06Test {
 
     @Test
     fun `Day 6 Part 2 actual`() {
-        expect(-1) {
+        expect(1705) {
             sut.part2(input)
         }
     }
