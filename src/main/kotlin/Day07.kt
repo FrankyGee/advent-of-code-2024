@@ -4,7 +4,7 @@ private val log = KotlinLogging.logger {}
 
 class Day07 {
 
-    enum class Operator(val apply: (Int, Int) -> Int, val symbol: String) {
+    enum class Operator(val apply: (Long, Long) -> Long, private val symbol: String) {
         PLUS({ a, b -> a + b }, "+"),
         MULTIPLY({ a, b -> a * b }, "*");
 
@@ -29,20 +29,20 @@ class Day07 {
         return totalOfValidValues
     }
 
-    private fun parseLine(line: String): Pair<Int, List<Int>> {
-        val target = line.substringBefore(':').toInt()
-        val components = line.substringAfter(": ").split(' ').map(String::toInt)
+    private fun parseLine(line: String): Pair<Long, List<Long>> {
+        val target = line.substringBefore(':').toLong()
+        val components = line.substringAfter(": ").split(' ').map(String::toLong)
         return Pair(target, components)
     }
 
     private fun isValid(
-        target: Int,
+        target: Long,
         operators: List<Operator>,
-        numbers: List<Int>
+        numbers: List<Long>
     ): Boolean =
         generateOperatorCombinations(operators, numbers.size - 1)
             .map { operatorCombo ->
-                numbers.drop(1)  // first number will initialise the accumulator later
+                numbers.drop(1)  // first number will be used to initialise the accumulator later
                     .zip(operatorCombo)  // zip each remaining number with the operator that will apply to it
                     .fold(numbers.first()) { acc, (number, operator) ->  // apply each operator/number pair in sequence
                         operator.apply(acc, number)
@@ -50,6 +50,9 @@ class Day07 {
             }
             .any { it == target }
 
+    /**
+     * Ok yes, I used Claude 3.5 Sonnet to help me work out this function
+     */
     private fun generateOperatorCombinations(operators: List<Operator>, slots: Int): Sequence<List<Operator>> =
         sequence {
             if (slots == 0) {
@@ -63,33 +66,6 @@ class Day07 {
                 }
             }
         }
-
-
-//    private fun isValid(testValue: String, components: List<Int>, operators: List<Operator>) {
-//        for (component in components) {
-//
-//            for (operator in operators) {
-//                // magic?
-//            }
-//
-//        }
-//    }
-
-
-//    fun List<Int>.combinations(operators: List<Operator>): Sequence<Pair<Int, List<Pair<Operator, Int>>>> = sequence {
-//        val numbers = this@combinations
-//        if (numbers.isEmpty()) return@sequence
-//
-//        val operatorCombinations = generateOperatorCombinations(operators, numbers.size - 1)
-//
-//        for (ops in operatorCombinations) {
-//            val operations = numbers.drop(1).zip(ops)
-//            val result = operations.fold(numbers.first()) { acc, (op: Operator, num) ->
-//                op.apply(acc, num)
-//            }
-//            yield(result to operations)
-//        }
-//    }
 
 
     fun part2(input: List<String>): Long {
