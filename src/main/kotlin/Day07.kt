@@ -39,23 +39,31 @@ class Day07 {
         target: Int,
         operators: List<Operator>,
         numbers: List<Int>
-    ): Boolean {
-        val combinations = generateOperatorCombinations(operators, numbers.size-1)
-        for (combo in combinations) {
-            var accumulator = numbers.first()
-            for ((index, number) in numbers.drop(1).withIndex()) {
-                println("Testing combo $combo against $numbers")
-                println("Performing $accumulator ${combo[index]} $number")
-                accumulator = combo[index].apply(accumulator, number)
+    ): Boolean =
+        generateOperatorCombinations(operators, numbers.size - 1)
+            .map { operatorCombo ->
+                numbers.drop(1)  // first number will initialise the accumulator later
+                    .zip(operatorCombo)  // zip each remaining number with the operator that will apply to it
+                    .fold(numbers.first()) { acc, (number, operator) ->  // apply each operator/number pair in sequence
+                        operator.apply(acc, number)
+                    }
             }
-            if (accumulator == target) {
-                println("Valid!")
-                return true
+            .any { it == target }
+
+    private fun generateOperatorCombinations(operators: List<Operator>, slots: Int): Sequence<List<Operator>> =
+        sequence {
+            if (slots == 0) {
+                yield(emptyList())
+                return@sequence
+            }
+
+            generateOperatorCombinations(operators, slots - 1).forEach { combination ->
+                operators.forEach { op ->
+                    yield(combination + op)
+                }
             }
         }
-        println("Invalid")
-        return false
-    }
+
 
 //    private fun isValid(testValue: String, components: List<Int>, operators: List<Operator>) {
 //        for (component in components) {
@@ -84,23 +92,8 @@ class Day07 {
 //    }
 
 
-    fun generateOperatorCombinations(operators: List<Operator>, slots: Int): Sequence<List<Operator>> = sequence {
-        if (slots == 0) {
-            yield(emptyList())
-            return@sequence
-        }
-
-        generateOperatorCombinations(operators, slots - 1).forEach { combination ->
-            operators.forEach { op ->
-                yield(combination + op)
-            }
-        }
-    }
-
-
     fun part2(input: List<String>): Long {
 
         return 0
     }
-
 }
