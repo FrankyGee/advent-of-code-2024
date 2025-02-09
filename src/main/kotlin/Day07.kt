@@ -1,12 +1,17 @@
 import io.github.oshai.kotlinlogging.KotlinLogging
+import java.util.StringJoiner
 
 private val log = KotlinLogging.logger {}
 
+fun main() {
+    println(Day07().part2(readInput("Day07")))
+}
 class Day07 {
 
     enum class Operator(val apply: (Long, Long) -> Long, private val symbol: String) {
         PLUS({ a, b -> a + b }, "+"),
-        MULTIPLY({ a, b -> a * b }, "*");
+        MULTIPLY({ a, b -> a * b }, "*"),
+        COMBINE({ a, b -> "$a$b".toLong() }, "||"),;
 
         override fun toString() = symbol
     }
@@ -14,17 +19,7 @@ class Day07 {
 
     fun part1(input: List<String>): Long {
         val operators = listOf(Operator.PLUS, Operator.MULTIPLY)
-        var totalOfValidValues = 0L
-
-        for (line in input) {
-            println("Processing line $line")
-
-            val (target, numbers) = parseLine(line)
-
-            if (isValid(target, operators, numbers)) {
-                totalOfValidValues += target
-            }
-        }
+        val totalOfValidValues = findSumOfValidValues(input, operators)
 
         return totalOfValidValues
     }
@@ -45,8 +40,10 @@ class Day07 {
                 numbers.drop(1)  // first number will be used to initialise the accumulator later
                     .zip(operatorCombo)  // zip each remaining number with the operator that will apply to it
                     .fold(numbers.first()) { acc, (number, operator) ->  // apply each operator/number pair in sequence
+//                        println("$acc $operator $number")
                         operator.apply(acc, number)
                     }
+//                    .also { println("total: $it") }
             }
             .any { it == target }
 
@@ -69,7 +66,29 @@ class Day07 {
 
 
     fun part2(input: List<String>): Long {
+        val operators = listOf(Operator.PLUS, Operator.MULTIPLY, Operator.COMBINE)
+        val totalOfValidValues = findSumOfValidValues(input, operators)
 
-        return 0
+        return totalOfValidValues
     }
+
+    private fun findSumOfValidValues(
+        input: List<String>,
+        operators: List<Operator>
+    ): Long {
+        var totalOfValidValues = 0L
+
+        for (line in input) {
+            println("Processing line $line")
+
+            val (target, numbers) = parseLine(line)
+
+            if (isValid(target, operators, numbers)) {
+                totalOfValidValues += target
+                println("Found a valid line, new total is $totalOfValidValues")
+            }
+        }
+        return totalOfValidValues
+    }
+
 }
