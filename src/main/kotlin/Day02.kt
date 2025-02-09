@@ -41,9 +41,3 @@ class Day02 {
         return countOfSafeReports
     }
 }
-
-fun main() {
-    val input = readInput("Day02.txt")
-    Day02().part1(input).println()
-    Day02().part2(input).println()
-}

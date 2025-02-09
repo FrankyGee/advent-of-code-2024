@@ -3,9 +3,6 @@ import java.util.StringJoiner
 
 private val log = KotlinLogging.logger {}
 
-fun main() {
-    println(Day07().part2(readInput("Day07")))
-}
 class Day07 {
 
     enum class Operator(val apply: (Long, Long) -> Long, private val symbol: String) {
