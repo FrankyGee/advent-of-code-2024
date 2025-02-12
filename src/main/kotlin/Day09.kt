@@ -17,7 +17,9 @@ class Day09 {
     private fun calculateChecksum(filesystem: List<Int>): Long {
         var checksum = 0L
         for ((index, fileId) in filesystem.withIndex()) {
-            checksum += index * fileId
+            if (fileId >= 0) {
+                checksum += index * fileId
+            }
         }
         return checksum
     }
@@ -66,12 +68,50 @@ class Day09 {
                 }
             }
             .flatten()
-            .also { it.println() }
+//            .also { it.println() }
     }
 
     fun part2(input: List<String>): Long {
 
-        return 0
+        /*
+        - Init an Array of size filesystem.size()
+        - Loop from max(filesystem) to 0  // highest ID
+          - Get size of file (filesystem.findAll(id).count() ?)
+          - Find first contiguous span of free blocks of size >= fileSize, starting from left
+          - Move file id into the correct number of free blocks
+        */
+
+        // Only 1 line for this puzzle
+        val startingDiskMap = input[0]
+
+        val filesystem = expand(startingDiskMap)
+        val working = filesystem.toIntArray()
+
+        for (fileId in working.max() downTo 0) {
+            val fileSize = working.count { it == fileId }
+            val indexOfEmptySpan = working
+                .asSequence()
+                .withIndex()
+                .windowed(fileSize)
+                .find { it.all { it.value == -1 } }
+                .run {
+                    this?.first()?.index
+                }
+            if (indexOfEmptySpan != null) {
+                // Remove file blocks from original location
+                val firstIndexOfOriginalFileLocation = working.indexOf(fileId)
+                if (indexOfEmptySpan < firstIndexOfOriginalFileLocation) {
+                    // Remove file blocks from old location
+                    working.fill(-1, firstIndexOfOriginalFileLocation, firstIndexOfOriginalFileLocation + fileSize)
+                    // Add file blocks to new location
+                    working.fill(fileId, indexOfEmptySpan, indexOfEmptySpan + fileSize)
+                }
+            }
+        }
+
+        val checksum = calculateChecksum(working.toList())
+
+        return checksum
     }
 
 }
