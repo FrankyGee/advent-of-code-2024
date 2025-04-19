@@ -66,7 +66,7 @@ class Day10 {
         val grid = Grid(input)
 
         for (trailhead in getTrailheads(grid)) {
-            totalScore += calculateTrailScore(trailhead, grid)
+            totalScore += calculateScore(trailhead, grid)
         }
 
         return totalScore
@@ -84,7 +84,7 @@ class Day10 {
         }
     }
 
-    fun calculateTrailScore(trailhead: Coordinate, grid: Grid): Int {
+    fun calculateScore(trailhead: Coordinate, grid: Grid): Int {
         return findReachable9s(trailhead, grid).size
     }
 
@@ -102,11 +102,30 @@ class Day10 {
         return reachable9s
     }
 
+    fun calculateRating(position: Coordinate, grid: Grid): Int {
+//        println(grid.format(position) + "\n")
+        if (grid.get(position) == 9) return 1
+
+        var numberOfTrails = 0
+        for (direction in Direction.entries) {
+            val nextPosition = direction.translate(position)
+            if (grid.isInBounds(nextPosition) && grid.get(nextPosition) == grid.get(position) + 1) {
+                numberOfTrails += calculateRating(nextPosition, grid)
+            }
+        }
+        return numberOfTrails
+    }
+
 
     fun part2(input: List<String>): Long {
+        var totalRating = 0L
+        val grid = Grid(input)
 
+        for (trailhead in getTrailheads(grid)) {
+            totalRating += calculateRating(trailhead, grid)
+        }
 
-        return -1
+        return totalRating
     }
 
 }

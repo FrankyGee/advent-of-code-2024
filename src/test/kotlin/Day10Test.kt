@@ -45,7 +45,7 @@ class Day10Test {
         )
         val trailheads = sequenceOf(Day10.Coordinate(3, 0))
         expect(4) {
-            sut.calculateTrailScore(trailheads.first(), grid)
+            sut.calculateScore(trailheads.first(), grid)
         }
     }
 
@@ -64,7 +64,7 @@ class Day10Test {
         )
         val trailheads = sequenceOf(Day10.Coordinate(1, 0))
         expect(1) {
-            sut.calculateTrailScore(trailheads.first(), grid)
+            sut.calculateScore(trailheads.first(), grid)
         }
     }
 
@@ -83,7 +83,7 @@ class Day10Test {
         )
         val trailheads = sequenceOf(Day10.Coordinate(5, 6))
         expect(2) {
-            sut.calculateTrailScore(trailheads.first(), grid)
+            sut.calculateScore(trailheads.first(), grid)
         }
     }
 
@@ -103,14 +103,14 @@ class Day10Test {
 
     @Test
     fun `Day 10 Part 2 test`() {
-        expect(0) {
+        expect(81) {
             sut.part2(testInput)
         }
     }
 
     @Test
     fun `Day 10 Part 2 actual`() {
-        expect(0) {
+        expect(1192) {
             sut.part2(input)
         }
     }
