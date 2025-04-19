@@ -42,6 +42,23 @@ class Day10 {
         fun isInBounds(coordinate: Coordinate): Boolean {
             return ((coordinate.row in rows.indices) && (coordinate.col >= 0) && (coordinate.col < rows[0].size))
         }
+
+        override fun toString(): String {
+            return format(Coordinate(-1, -1))
+        }
+
+        fun format(highlight: Coordinate): String {
+            return rows.mapIndexed { rowIndex, row ->
+                row.mapIndexed { colIndex, cell ->
+                    val cellStr = if (cell == -1) "." else cell.toString()
+                    if (rowIndex == highlight.row && colIndex == highlight.col) {
+                        cellStr.red()
+                    } else {
+                        cellStr
+                    }
+                }.joinToString(" ")
+            }.joinToString("\n")
+        }
     }
 
     fun part1(input: List<String>): Long {
@@ -49,7 +66,7 @@ class Day10 {
         val grid = Grid(input)
 
         for (trailhead in getTrailheads(grid)) {
-            totalScore += findTrailScore(trailhead, grid)
+            totalScore += calculateTrailScore(trailhead, grid)
         }
 
         return totalScore
@@ -67,28 +84,22 @@ class Day10 {
         }
     }
 
-    fun findTrailScore(trailhead: Coordinate, grid: Grid): Int {
-        // Check each direction for a trail (n + 1)
-        val elevation = grid.get(trailhead)
-
-
-        // For each trail, follow it
-        // If it reaches 9, add 1 to the score
-        // If there are no trails, stop
-        return 0
+    fun calculateTrailScore(trailhead: Coordinate, grid: Grid): Int {
+        return findReachable9s(trailhead, grid).size
     }
 
-    fun countTrails(position: Coordinate, grid: Grid): Int {
-        if (grid.get(position) == 9) return 1
+    fun findReachable9s(position: Coordinate, grid: Grid): Set<Coordinate> {
+//        println(grid.format(position) + "\n")
+        if (grid.get(position) == 9) return setOf(position)
 
-        var completeRoutes = 0
+        val reachable9s = mutableSetOf<Coordinate>()
         for (direction in Direction.entries) {
             val nextPosition = direction.translate(position)
-            if (grid.isInBounds(nextPosition) && grid.get(nextPosition) > grid.get(position)) {
-                completeRoutes += countTrails(nextPosition, grid)
+            if (grid.isInBounds(nextPosition) && grid.get(nextPosition) == grid.get(position) + 1) {
+                reachable9s += findReachable9s(nextPosition, grid)
             }
         }
-        return completeRoutes
+        return reachable9s
     }
 
 
