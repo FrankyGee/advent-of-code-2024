@@ -1,5 +1,9 @@
 .gradle
-.idea
+# Exclude *contents* of .idea directory, rather than the directory itself, so that exceptions can be added
+.idea/*
+# Re-include specific .idea directories
+!/.idea/fileTemplates/
+!/.idea/file.template.settings.xml
 .kotlin/
 build
 out/
