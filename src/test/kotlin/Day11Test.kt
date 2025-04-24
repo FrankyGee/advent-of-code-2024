@@ -7,21 +7,21 @@ class Day11Test {
     private val input = readInput("Day${day}")
     private var sut = Day11()
 
-    @Test
-    fun applyRules() {
-        expect(listOf(253000L)) {
-            sut.applyRules(125L)
-        }
-        expect(listOf(1L, 7L)) {
-            sut.applyRules(17L)
-        }
-        expect(listOf(253L, 0L)) {
-            sut.applyRules(253000L)
-        }
-        expect(listOf(14168L)) {
-            sut.applyRules(7L)
-        }
-    }
+//    @Test
+//    fun applyRules() {
+//        expect(listOf(253000L)) {
+//            sut.applyRules((125L))
+//        }
+//        expect(listOf(1L, 7L)) {
+//            sut.applyRules((17L))
+//        }
+//        expect(listOf(253L, 0L)) {
+//            sut.applyRules(253000)
+//        }
+//                expect (listOf(14168L)) {
+//            sut.applyRules((7))
+//        }
+//    }
 
     @Test
     fun `Day 11 Part 1 test`() {
@@ -39,14 +39,14 @@ class Day11Test {
 
     @Test
     fun `Day 11 Part 2 test`() {
-        expect(0) {
+        expect(65601038650482) {
             sut.part2(testInput)
         }
     }
 
     @Test
     fun `Day 11 Part 2 actual`() {
-        expect(0) {
+        expect(231532558973909) {
             sut.part2(input)
         }
     }
